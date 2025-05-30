@@ -1,7 +1,14 @@
-let hello = "Hello GitHub";
+let hello = "Hello GitHub!";
 
-returnHello = () => {
+let returnHello = () => {
   console.log(hello);
 }
 
 returnHello();
+
+const fs = require("fs");
+
+fs.unlink("test.txt", (err) => {
+  if (err) throw err;
+  console.log("File test.txt deleted successfully!");
+});

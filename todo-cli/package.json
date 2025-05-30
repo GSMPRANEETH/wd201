@@ -1,0 +1,12 @@
+{
+  "name": "todo-cli",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "PRANEETH <praneethgsm47@gmail.com>",
+  "type": "commonjs",
+  "main": "todo.js",
+  "scripts": {
+    "test": "jest"
+  }
+}

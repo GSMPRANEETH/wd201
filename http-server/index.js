@@ -29,7 +29,6 @@ fs.readFile("registration.html", (err, registration) => {
   registrationContent = registration;
 });
 
-
 http
   .createServer((request, response) => {
     let url = request.url;

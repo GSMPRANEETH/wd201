@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Registration Form</title>
+<style>
+  /* Reset some default styles */
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f7f9fc;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  h1 {
+    color: #333;
+    margin-bottom: 20px;
+  }
+
+  form {
+    background: #fff;
+    padding: 25px 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgb(0 0 0 / 0.1);
+    max-width: 400px;
+    width: 100%;
+  }
+
+  form label {
+    display: block;
+    margin-bottom: 15px;
+    font-weight: 600;
+    color: #444;
+  }
+
+  form input[type="text"],
+  form input[type="email"],
+  form input[type="password"],
+  form input[type="date"] {
+    width: 100%;
+    padding: 10px 12px;
+    margin-top: 6px;
+    border: 1.8px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+
+  form input[type="text"]:focus,
+  form input[type="email"]:focus,
+  form input[type="password"]:focus,
+  form input[type="date"]:focus {
+    border-color: #007BFF;
+    outline: none;
+  }
+
+  form input[type="checkbox"] {
+    margin-left: 0;
+    transform: scale(1.15);
+    cursor: pointer;
+  }
+
+  form label[for="terms"] {
+    font-weight: normal;
+    display: inline-block;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  button[type="submit"] {
+    background-color: #007BFF;
+    color: white;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 20px;
+    width: 100%;
+    font-size: 1.1rem;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.25s ease;
+  }
+
+  button[type="submit"]:hover {
+    background-color: #0056b3;
+  }
+
+  table {
+    margin-top: 35px;
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 800px;
+    background: white;
+    box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  thead {
+    background-color: #007BFF;
+    color: white;
+  }
+
+  th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: 1rem;
+  }
+
+  tbody tr:hover {
+    background-color: #f1f7ff;
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    form, table {
+      width: 95%;
+    }
+
+    th, td {
+      font-size: 0.9rem;
+      padding: 10px 8px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<h1>Registration Form</h1>
+
+<form id="registrationForm">
+  <label for="name">
+    Name:
+    <input type="text" id="name" required />
+  </label>
+
+  <label for="email">
+    Email:
+    <input type="email" id="email" required />
+  </label>
+
+  <label for="password">
+    Password:
+    <input type="password" id="password" required />
+  </label>
+
+  <label for="dob">
+    Date of Birth:
+    <input type="date" id="dob" required />
+  </label>
+
+  <label>
+    <input type="checkbox" id="terms" />
+    <span for="terms">Accept Terms and Conditions</span>
+  </label>
+
+  <button type="submit">Register</button>
+</form>
+
+<table border="1" id="dataTable" aria-label="Registration data table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Password</th>
+      <th>Dob</th>
+      <th>Accepted terms?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- rows inserted here -->
+  </tbody>
+</table>
+
+<script>
+  const form = document.getElementById('registrationForm');
+  const tableBody = document.querySelector('#dataTable tbody');
+  const storageKey = 'registrations';
+
+  function isValidDOB(dateString) {
+    const dob = new Date(dateString);
+    if (isNaN(dob)) return false;
+
+    const today = new Date();
+    let age = today.getFullYear() - dob.getFullYear();
+
+    const m = today.getMonth() - dob.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+      age--;
+    }
+
+    return age >= 18 && age <= 55;
+  }
+
+  function loadRegistrations() {
+    const saved = localStorage.getItem(storageKey);
+    if (!saved) return [];
+    try {
+      return JSON.parse(saved);
+    } catch {
+      return [];
+    }
+  }
+
+  function saveRegistrations(data) {
+    localStorage.setItem(storageKey, JSON.stringify(data));
+  }
+
+  function addRow(data) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${data.name}</td>
+      <td>${data.email}</td>
+      <td>${data.password}</td>
+      <td>${data.dob}</td>
+      <td>${data.acceptedTerms}</td>
+    `;
+    tableBody.appendChild(tr);
+  }
+
+  function renderTable() {
+    tableBody.innerHTML = '';
+    const registrations = loadRegistrations();
+    registrations.forEach(addRow);
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const name = form.name.value.trim();
+    const email = form.email.value.trim();
+    const password = form.password.value;
+    const dob = form.dob.value;
+    const acceptedTerms = form.terms.checked;
+
+    if (!isValidDOB(dob)) {
+      alert('Date of birth must be for age between 18 and 55.');
+      return;
+    }
+
+    const newEntry = { name, email, password, dob, acceptedTerms };
+
+    const registrations = loadRegistrations();
+    registrations.push(newEntry);
+    saveRegistrations(registrations);
+
+    addRow(newEntry);
+
+    form.reset();
+  });
+
+  window.addEventListener('load', renderTable);
+</script>
+
+</body>
+</html>

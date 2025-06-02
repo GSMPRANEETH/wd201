@@ -1,11 +1,27 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
+console.log("Loading app.js...");
+
 const express = require("express");
 const app = express();
 const { Todo } = require("./models");
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
+const path = require("path");
 
-app.get("/", function (request, response) {
-	response.send("Hello World");
+app.set("view engine", "ejs");
+
+app.use(express.static(path.join(__dirname, "public")));
+
+app.get("/", async (request, response) => {
+	console.log("GET / route hit");
+	const allTodos = await Todo.findAll();
+
+	if (request.accepts("html")) {
+		response.render("index", { allTodos }); // ✅ this fixes the issue
+	} else {
+		response.json(allTodos);
+	}
 });
 
 app.get("/todos", async function (_request, response) {

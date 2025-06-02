@@ -24,6 +24,36 @@ app.get("/", async (request, response) => {
 	}
 });
 
+app.get("/seed", async (req, res) => {
+	const sampleTodos = [
+		{
+			title: "First Render Todo",
+			dueDate: new Date(),
+			completed: false,
+		},
+		{
+			title: "Second Render Todo",
+			dueDate: new Date(Date.now() + 86400000), // +1 day
+			completed: false,
+		},
+		{
+			title: "Completed Task",
+			dueDate: new Date(Date.now() - 86400000), // -1 day
+			completed: true,
+		},
+	];
+
+	try {
+		const createdTodos = await Promise.all(
+			sampleTodos.map((todo) => Todo.addTodo(todo))
+		);
+		res.send(`Seeded ${createdTodos.length} todos to remote DB!`);
+	} catch (error) {
+		console.error("Error seeding todos:", error);
+		res.status(500).send("Error seeding data");
+	}
+});
+
 app.get("/todos", async function (_request, response) {
 	console.log("Processing list of all Todos ...");
 	// FILL IN YOUR CODE HERE

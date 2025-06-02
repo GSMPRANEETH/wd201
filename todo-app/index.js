@@ -1,5 +1,14 @@
-const app = require("./app");
+/* eslint-disable no-unused-vars */
+const { request, response } = require("express");
+const express = require("express");
+const app = express();
+const bodyParser = require("body-parser");
+app.use(bodyParser.json());
 
-app.listen(3000, () => {
-  console.log("Started express server at port 3000");
+const { Todo } = require("./models");
+
+app.get("/todos", function (request, response) {
+	response.send("Hello World");
 });
+
+app.listen(3000);

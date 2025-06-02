@@ -13,8 +13,7 @@ app.get("/todos", async function (_request, response) {
 	// FILL IN YOUR CODE HERE
 	try {
 		const todos = await Todo.findAll();
-		response.send(todos);
-		return response.json(todos);
+		return response.send(todos);
 	} catch (error) {
 		console.log(error);
 		return response.status(422).json(error);

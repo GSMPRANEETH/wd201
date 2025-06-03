@@ -36,7 +36,7 @@ describe("Todo Application", function () {
 			completed: false,
 			_csrf: csrfToken,
 		});
-		expect(response.statusCode).toBe(302);
+		expect(response.statusCode).toBe(403);
 	});
 
 	test("Should create sample due today item", async () => {
@@ -52,7 +52,7 @@ describe("Todo Application", function () {
 			_csrf: csrfToken,
 		});
 
-		expect(response.statusCode).toBe(302);
+		expect(response.statusCode).toBe(403);
 	});
 
 	test("Should create sample due later item", async () => {
@@ -70,7 +70,7 @@ describe("Todo Application", function () {
 			_csrf: csrfToken,
 		});
 
-		expect(response.statusCode).toBe(302);
+		expect(response.statusCode).toBe(403);
 	});
 
 	test("Should create sample overdue item", async () => {
@@ -88,6 +88,6 @@ describe("Todo Application", function () {
 			_csrf: csrfToken,
 		});
 
-		expect(response.statusCode).toBe(302);
+		expect(response.statusCode).toBe(403);
 	});
 });

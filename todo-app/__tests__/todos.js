@@ -39,58 +39,55 @@ describe("Todo Application", function () {
 		expect(response.statusCode).toBe(302);
 	});
 
-	// test("Marks a todo with the given ID as complete", async () => {
-	// 	const response = await agent.post("/todos").send({
-	// 		title: "Buy milk",
-	// 		dueDate: new Date().toISOString(),
-	// 		completed: false,
-	// 	});
-	// 	const parsedResponse = JSON.parse(response.text);
-	// 	const todoID = parsedResponse.id;
+	test("Should create sample due today item", async () => {
+		const res = await agent.get("/");
+		const csrfToken = extractCsrfToken(res);
 
-	// 	expect(parsedResponse.completed).toBe(false);
+		const today = new Date().toISOString().split("T")[0];
 
-	// 	const markCompleteResponse = await agent
-	// 		.put(`/todos/${todoID}/markAsCompleted`)
-	// 		.send();
-	// 	const parsedUpdateResponse = JSON.parse(markCompleteResponse.text);
-	// 	expect(parsedUpdateResponse.completed).toBe(true);
-	// });
+		const response = await agent.post("/todos").send({
+			title: "Due Today",
+			dueDate: today,
+			completed: false,
+			_csrf: csrfToken,
+		});
 
-	// test("Fetches all todos in the database using /todos endpoint", async () => {
-	// 	await agent.post("/todos").send({
-	// 		title: "Buy xbox",
-	// 		dueDate: new Date().toISOString(),
-	// 		completed: false,
-	// 	});
-	// 	await agent.post("/todos").send({
-	// 		title: "Buy ps3",
-	// 		dueDate: new Date().toISOString(),
-	// 		completed: false,
-	// 	});
-	// 	const response = await agent.get("/todos");
-	// 	const parsedResponse = JSON.parse(response.text);
+		expect(response.statusCode).toBe(302);
+	});
 
-	// 	expect(parsedResponse.length).toBe(4);
-	// 	expect(parsedResponse[3]["title"]).toBe("Buy ps3");
-	// });
+	test("Should create sample due later item", async () => {
+		const res = await agent.get("/");
+		const csrfToken = extractCsrfToken(res);
 
-	// test("Deletes a todo with the given ID if it exists and sends a boolean response", async () => {
-	// 	// FILL IN YOUR CODE HERE
-	// 	const response = await agent.post("/todos").send({
-	// 		title: "Buy milk",
-	// 		dueDate: new Date().toISOString(),
-	// 		completed: false,
-	// 	});
-	// 	const parsedResponse = JSON.parse(response.text);
-	// 	const todoID = parsedResponse.id;
-	// 	const deleteResponse = await agent.delete(`/todos/${todoID}`);
-	// 	const parsedDeleteResponse = JSON.parse(deleteResponse.text);
-	// 	expect(parsedDeleteResponse).toBe(true);
-	// 	await agent.post("/todos").send({
-	// 		title: "Buy milk",
-	// 		dueDate: new Date().toISOString(),
-	// 		completed: false,
-	// 	});
-	// });
+		const tomorrow = new Date();
+		tomorrow.setDate(tomorrow.getDate() + 1);
+		const dueDate = tomorrow.toISOString().split("T")[0];
+
+		const response = await agent.post("/todos").send({
+			title: "Due Later",
+			dueDate: dueDate,
+			completed: false,
+			_csrf: csrfToken,
+		});
+
+		expect(response.statusCode).toBe(302);
+	});
+
+	test("Should create sample overdue item", async () => {
+		const res = await agent.get("/");
+		const csrfToken = extractCsrfToken(res);
+
+		const yesterday = new Date();
+		yesterday.setDate(yesterday.getDate() - 1);
+		const dueDate = yesterday.toISOString().split("T")[0];
+
+		const response = await agent.post("/todos").send({
+			title: "Overdue",
+			dueDate: dueDate,
+			completed: false,
+			_csrf: csrfToken,
+		});
+
+		expect(response.statusCode).toBe(302);
+	});
 });

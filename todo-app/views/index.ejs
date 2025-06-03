@@ -9,9 +9,9 @@
 	</head>
 	<body class="bg-gray-100">
 		<%- include('header.ejs') %>
-		<form>
-			<input type="text" placeholder="What's next?" required/>
-			<input type="date"/>
+		<form action="/todos" method="post">
+			<input type="text" name = "title" placeholder="What's next?" required/>
+			<input type="date" name = "dueDate" />
 			<button type="submit">Add</button>
 		</form>
 			<h5>Overdue</h5> (<span id="count-overdue"><%= allTodos.length %></span>)

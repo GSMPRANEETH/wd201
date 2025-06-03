@@ -21,43 +21,50 @@
   });
 %>
 
-<!-- Overdue Section -->
-<h5>
-  Overdue (<span id="count-overdue"><%= overdue.length %></span>)
-</h5>
-<ul>
-  <% overdue.forEach(todo => { %>
-    <li>
-      <input type="checkbox" id="todo-<%= todo.id %>">
-      <label for="todo-<%= todo.id %>"><%= todo.title %></label>
-    </li>
-  <% }) %>
-</ul>
+<!-- Overdue -->
+<div class="mb-6">
+  <h5 class="text-red-600 font-semibold text-lg mb-2">
+    Overdue (<span id="count-overdue"><%= overdue.length %></span>)
+  </h5>
+  <ul class="list-disc list-inside space-y-1">
+    <% overdue.forEach(todo => { %>
+      <li class="flex items-center space-x-2">
+  <input type="checkbox" id="todo-<%= todo.id %>" class="accent-green-500" />
+  <label for="todo-<%= todo.id %>" class="text-gray-800"><%= todo.title %> (Due: <%= todo.dueDate %>)</label>
+</li>
 
-<!-- Due Today Section -->
-<h5>
-  Due Today (<span id="count-due-today"><%= dueToday.length %></span>)
-</h5>
-<ul>
-  <% dueToday.forEach(todo => { %>
-    <li>
-      <input type="checkbox" id="todo-<%= todo.id %>">
-      <label for="todo-<%= todo.id %>"><%= todo.title %></label>
-    </li>
-  <% }) %>
-</ul>
+    <% }) %>
+  </ul>
+</div>
 
-<!-- Due Later Section -->
-<h5>
-  Due Later (<span id="count-due-later"><%= dueLater.length %></span>)
-</h5>
-<ul>
-  <% dueLater.forEach(todo => { %>
-    <li>
-      <input type="checkbox" id="todo-<%= todo.id %>">
-      <label for="todo-<%= todo.id %>"><%= todo.title %></label>
-    </li>
-  <% }) %>
-</ul>
+<!-- Due Today -->
+<div class="mb-6">
+  <h5 class="text-yellow-600 font-semibold text-lg mb-2">
+    Due Today (<span id="count-due-today"><%= dueToday.length %></span>)
+  </h5>
+  <ul class="list-disc list-inside space-y-1">
+    <% dueToday.forEach(todo => { %>
+      <li class="flex items-center space-x-2">
+  <input type="checkbox" id="todo-<%= todo.id %>" class="accent-green-500" />
+  <label for="todo-<%= todo.id %>" class="text-gray-800"><%= todo.title %> (Due: <%= todo.dueDate %>)</label>
+</li>
 
+    <% }) %>
+  </ul>
+</div>
+
+<!-- Due Later -->
+<div class="mb-6">
+  <h5 class="text-green-600 font-semibold text-lg mb-2">
+    Due Later (<span id="count-due-later"><%= dueLater.length %></span>)
+  </h5>
+  <ul class="list-disc list-inside space-y-1">
+    <% dueLater.forEach(todo => { %>
+      <li class="flex items-center space-x-2">
+  <input type="checkbox" id="todo-<%= todo.id %>" class="accent-green-500" />
+  <label for="todo-<%= todo.id %>" class="text-gray-800"><%= todo.title %> (Due: <%= todo.dueDate %>)</label>
+</li>
+
+    <% }) %>
+  </ul>
 </div>

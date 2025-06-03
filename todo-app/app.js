@@ -18,41 +18,6 @@ app.set("view engine", "ejs");
 
 app.use(express.static(path.join(__dirname, "public")));
 
-// Assuming you have some database or data store API like this:
-// getTodos() -> returns all todos
-// createTodo(todo) -> adds a todo
-
-async function seedSampleTodosIfEmpty() {
-	const todos = await getTodos();
-	if (todos.length === 0) {
-		const today = new Date();
-		const yesterday = new Date(today);
-		yesterday.setDate(today.getDate() - 1);
-		const tomorrow = new Date(today);
-		tomorrow.setDate(today.getDate() + 1);
-
-		await addTodo({
-			title: "Sample overdue todo",
-			dueDate: yesterday.toISOString().slice(0, 10),
-		});
-		await addTodo({
-			title: "Sample due today todo",
-			dueDate: today.toISOString().slice(0, 10),
-		});
-		await addTodo({
-			title: "Sample due later todo",
-			dueDate: tomorrow.toISOString().slice(0, 10),
-		});
-	}
-}
-
-// Call this function in your route handler before rendering
-app.get("/", async (req, res) => {
-	await seedSampleTodosIfEmpty();
-	const allTodos = await getTodos();
-	res.render("index", { allTodos });
-});
-
 app.get("/", async (request, response) => {
 	console.log("GET / route hit");
 	const allTodos = await Todo.findAll();

@@ -6,9 +6,43 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Todo Application</title>
 		<link rel="stylesheet" href="/css/styles.css" />
+		<script src="https://cdn.tailwindcss.com"></script>
 	</head>
-	<body>
-		<%- include('header.ejs') %> <%- include('todos.ejs') %> <%-
-		include('footer.ejs') %>
+	<body class="bg-gray-100">
+		<%- include('header.ejs') %>
+
+		<div class="max-w-2xl mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
+			<!-- To-Do Form -->
+			<form
+				action="/todos"
+				method="POST"
+				class="flex flex-col sm:flex-row gap-4 mb-6"
+			>
+				<input
+					type="text"
+					name="title"
+					placeholder="What's next?"
+					required
+					class="flex-grow border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+				/>
+				<input
+					type="date"
+					name="dueDate"
+					required
+					class="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+				/>
+				<button
+					type="submit"
+					class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-md"
+				>
+					Add
+				</button>
+			</form>
+
+			<!-- To-Do List -->
+			<%- include('todos.ejs') %>
+		</div>
+
+		<%- include('footer.ejs') %>
 	</body>
 </html>

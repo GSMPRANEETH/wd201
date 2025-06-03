@@ -1,5 +1,7 @@
 body {
-	background-color: aqua;
-	font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
-	text-align: center;
+	background-color: lightgrey;
+}
+
+.todos.hover .trash-icon {
+	display: block;
 }

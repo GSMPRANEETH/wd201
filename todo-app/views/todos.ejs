@@ -1,7 +1,70 @@
-    <table>
-  <% for (var i = 0; i < allTodos.length; i++) { %>
-    <tr>
-      <td><%= allTodos[i].title %></td>
-    </tr>
-  <% } %>
-</table>
+<%
+  const today = new Date();
+  const isSameDate = (d1, d2) =>
+    d1.getDate() === d2.getDate() &&
+    d1.getMonth() === d2.getMonth() &&
+    d1.getFullYear() === d2.getFullYear();
+
+  const overdue = [];
+  const dueToday = [];
+  const dueLater = [];
+
+  allTodos.forEach(todo => {
+    const due = new Date(todo.dueDate);
+    if (due < today && !isSameDate(due, today)) {
+      overdue.push(todo);
+    } else if (isSameDate(due, today)) {
+      dueToday.push(todo);
+    } else {
+      dueLater.push(todo);
+    }
+  });
+%>
+
+<!-- Overdue -->
+<div class="mb-6">
+  <h5 class="text-red-600 font-semibold text-lg mb-2">
+    Overdue (<span id="count-overdue"><%= overdue.length %></span>)
+  </h5>
+  <ul class="list-disc list-inside space-y-1">
+    <% overdue.forEach(todo => { %>
+      <li class="flex items-center space-x-2">
+  <input type="checkbox" id="todo-<%= todo.id %>" class="accent-green-500" />
+  <label for="todo-<%= todo.id %>" class="text-gray-800"><%= todo.title %> (Due: <%= todo.dueDate %>)</label>
+</li>
+
+    <% }) %>
+  </ul>
+</div>
+
+<!-- Due Today -->
+<div class="mb-6">
+  <h5 class="text-yellow-600 font-semibold text-lg mb-2">
+    Due Today (<span id="count-due-today"><%= dueToday.length %></span>)
+  </h5>
+  <ul class="list-disc list-inside space-y-1">
+    <% dueToday.forEach(todo => { %>
+      <li class="flex items-center space-x-2">
+  <input type="checkbox" id="todo-<%= todo.id %>" class="accent-green-500" />
+  <label for="todo-<%= todo.id %>" class="text-gray-800"><%= todo.title %> (Due: <%= todo.dueDate %>)</label>
+</li>
+
+    <% }) %>
+  </ul>
+</div>
+
+<!-- Due Later -->
+<div class="mb-6">
+  <h5 class="text-green-600 font-semibold text-lg mb-2">
+    Due Later (<span id="count-due-later"><%= dueLater.length %></span>)
+  </h5>
+  <ul class="list-disc list-inside space-y-1">
+    <% dueLater.forEach(todo => { %>
+      <li class="flex items-center space-x-2">
+  <input type="checkbox" id="todo-<%= todo.id %>" class="accent-green-500" />
+  <label for="todo-<%= todo.id %>" class="text-gray-800"><%= todo.title %> (Due: <%= todo.dueDate %>)</label>
+</li>
+
+    <% }) %>
+  </ul>
+</div>

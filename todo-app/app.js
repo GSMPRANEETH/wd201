@@ -1,13 +1,17 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 console.log("Loading app.js...");
-
 const express = require("express");
+var csrf = require("csurf");
 const app = express();
 const { Todo } = require("./models");
 const bodyParser = require("body-parser");
+var cookieParser = require("cookie-parser");
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser("shh, some secret string!"));
+app.use(csrf({ cookie: true })); // ✅ Use this if using cookie-parser (which you are)
+
 const path = require("path");
 
 app.set("view engine", "ejs");
@@ -19,11 +23,12 @@ app.get("/", async (request, response) => {
 	const allTodos = await Todo.findAll();
 
 	if (request.accepts("html")) {
-		response.render("index", { allTodos }); // ✅ this fixes the issue
+		response.render("index", { allTodos, csrfToken: request.csrfToken() });
 	} else {
 		response.json(allTodos);
 	}
 });
+
 app.get("/todos", async function (_request, response) {
 	console.log("Processing list of all Todos ...");
 	// FILL IN YOUR CODE HERE
@@ -59,27 +64,28 @@ app.post("/todos", async function (request, response) {
 	}
 });
 
-app.put("/todos/:id/markAsCompleted", async function (request, response) {
-	const todo = await Todo.findByPk(request.params.id);
+app.put("/todos/:id", async (req, res) => {
 	try {
-		const updatedTodo = await todo.markAsCompleted();
-		return response.json(updatedTodo);
+		const todo = await Todo.findByPk(req.params.id);
+		if (!todo) return res.status(404).send("Todo not found");
+
+		todo.completed = req.body.completed;
+		await todo.save();
+
+		return res.json(todo);
 	} catch (error) {
-		console.log(error);
-		return response.status(422).json(error);
+		console.error(error);
+		return res.status(422).json(error);
 	}
 });
 
 app.delete("/todos/:id", async function (request, response) {
 	console.log("We have to delete a Todo with ID: ", request.params.id);
 	// FILL IN YOUR CODE HERE
+	console.log("Deleting a Todo with ID: ", request.params.id);
 	try {
-		const deleted = await Todo.destroy({ where: { id: request.params.id } });
-		if (deleted) {
-			return response.send(true);
-		} else {
-			return response.send(false);
-		}
+		await Todo.removeTodo(request.params.id);
+		return response.send(true);
 	} catch (error) {
 		console.log(error);
 		return response.status(422).json(error);

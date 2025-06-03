@@ -4,23 +4,68 @@
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="csrf-token" content="<%= csrfToken %>" />
 		<title>Todo Application</title>
 		<link rel="stylesheet" href="/css/styles.css" />
 	</head>
 	<body class="bg-gray-100">
 		<%- include('header.ejs') %>
 		<form action="/todos" method="post">
+			<input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+
 			<input type="text" name = "title" placeholder="What's next?" required/>
-			<input type="date" name = "dueDate" />
+			<input type="date" name = "dueDate" required />
 			<button type="submit">Add</button>
 		</form>
-			<h5>Overdue</h5> (<span id="count-overdue"><%= allTodos.length %></span>)
-			<%- include('todos.ejs') %>
-			<h5>Due Today</h5>(<span id="count-due-today"><%= allTodos.length %></span>)
-			<%- include('todos.ejs') %>
-			<h5>Due Later</h5>(<span id="count-due-later"><%= allTodos.length %></span>)
 			<%- include('todos.ejs') %>
 			 <%- include('footer.ejs') %>
 		</div>
 	</body>
+	<script>
+  const csrfToken = document
+    .querySelector('meta[name="csrf-token"]')
+    .getAttribute("content");
+
+  function updateTodo(id) {
+    const checkbox = document.getElementById(`todo-${id}`);
+    const completed = checkbox.checked;
+
+    fetch(`/todos/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "CSRF-Token": csrfToken, // Needed if using csurf middleware
+      },
+      body: JSON.stringify({ completed, _csrf: csrfToken }),
+    })
+    .then(response => {
+      if (response.ok) {
+        window.location.reload();
+      }
+    })
+    .catch(error => {
+      console.error("Error updating todo:", error);
+    });
+  }
+
+  function deleteTodo(id) {
+    fetch(`/todos/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "CSRF-Token": csrfToken,
+      },
+      body: JSON.stringify({ _csrf: csrfToken }),
+    })
+    .then(response => {
+      if (response.ok) {
+        window.location.reload();
+      }
+    })
+    .catch(error => {
+      console.error("Error deleting todo:", error);
+    });
+  }
+</script>
+
 </html>

@@ -1,8 +1,63 @@
-<table>
-  <% allTodos.forEach(todo => { %>
-    <tr>
-      <td><input type="checkbox" id="todo-<%= todo.id %>" class="accent-green-500" /></td>
-      <td><label for="todo-<%= todo.id %>" class="text-gray-800"><%= todo.title %></label></td>
-    </tr>
-  <% }) %>
-</table>
+<%
+const today = new Date();
+const isSameDay = (d1, d2) =>
+  d1.getFullYear() === d2.getFullYear() &&
+  d1.getMonth() === d2.getMonth() &&
+  d1.getDate() === d2.getDate();
+
+const overdue = [];
+const dueToday = [];
+const dueLater = [];
+const completed = [];
+
+allTodos.forEach(todo => {
+  const due = new Date(todo.dueDate);
+  if (todo.completed) {
+    completed.push(todo);
+  } else if (due < today && !isSameDay(due, today)) {
+    overdue.push(todo);
+  } else if (isSameDay(due, today)) {
+    dueToday.push(todo);
+  } else {
+    dueLater.push(todo);
+  }
+});
+
+const sections = [
+  { title: "Overdue", id: "count-overdue", items: overdue },
+  { title: "Due Today", id: "count-due-today", items: dueToday },
+  { title: "Due Later", id: "count-due-later", items: dueLater },
+  { title: "Completed", id: "count-completed", items: completed },
+];
+%>
+
+<% sections.forEach(section => { %>
+  <h5>
+    <%= section.title %> (<span id="<%= section.id %>"><%= section.items.length %></span>)
+  </h5>
+  <table>
+    <% section.items.forEach(todo => { %>
+      <tr>
+        <td>
+          <input
+            id="todo-<%= todo.id %>"
+            type="checkbox"
+            <%= todo.completed ? "checked" : "" %>
+            onclick="updateTodo(<%= todo.id %>)"
+          >
+        </td>
+        <td style="display: flex; align-items: center; gap: 8px;">
+          <label for="todo-<%= todo.id %>" style="margin-right: 8px;" class = "Todo-item"><%= todo.title %></label>
+          <a href="#" onclick="event.preventDefault(); deleteTodo(<%= todo.id %>)">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                 viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                 width="16" height="16" style="cursor: pointer;">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                    d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+          </a>
+        </td>
+      </tr>
+    <% }) %>
+  </table>
+<% }) %>

@@ -28,7 +28,7 @@ const sections = [
   </div>
 <% } %>
 
-    <form action="/todos" method="post">
+    <form action="/todo" method="post">
 			<input type="hidden" name="_csrf" value="<%= csrfToken %>" />
 
 			<input type="text" name = "title" placeholder="What's next?"/>
@@ -78,7 +78,7 @@ const sections = [
     const checkbox = document.getElementById(`todo-${id}`);
     const completed = checkbox.checked;
 
-    fetch(`/todos/${id}`, {
+    fetch(`/todo/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -97,7 +97,7 @@ const sections = [
   }
 
   function deleteTodo(id) {
-  fetch(`/todos/${id}?_csrf=${csrfToken}`, {
+  fetch(`/todo/${id}?_csrf=${csrfToken}`, {
     method: "DELETE",
   })
     .then((response) => {

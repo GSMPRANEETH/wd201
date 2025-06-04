@@ -104,7 +104,7 @@ app.get("/", async (request, response) => {
 });
 
 app.get(
-  "/todos",
+  "/todo",
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
     console.log("GET / route hit");
@@ -120,7 +120,7 @@ app.get(
       { title: "Completed", id: "count-completed", items: completed },
     ];
     if (request.accepts("html")) {
-      response.render("todos", {
+      response.render("todo", {
         sections,
         overdue,
         dueToday,
@@ -133,12 +133,12 @@ app.get(
     }
     // First, we have to query our PostgerSQL database using Sequelize to get list of all Todos.
     // Then, we have to respond with all Todos, like:
-    // response.send(todos)
+    // response.send(todo)
   },
 );
 
 app.get(
-  "/todos/:id",
+  "/todo/:id",
   connectEnsureLogin.ensureLoggedIn(),
   async function (request, response) {
     try {
@@ -152,7 +152,7 @@ app.get(
 );
 
 app.post(
-  "/todos",
+  "/todo",
   connectEnsureLogin.ensureLoggedIn(),
   async function (request, response) {
     try {
@@ -161,13 +161,13 @@ app.post(
         dueDate: request.body.dueDate,
         userId: request.user.id,
       });
-      return response.redirect("/todos");
+      return response.redirect("/todo");
     } catch (error) {
       if (error.name === "SequelizeValidationError") {
         error.errors.forEach((e) => {
           request.flash("error", e.message);
         });
-        return response.redirect("/todos");
+        return response.redirect("/todo");
       }
 
       console.error("Unexpected error:", error);
@@ -176,7 +176,7 @@ app.post(
   },
 );
 
-app.put("/todos/:id", connectEnsureLogin.ensureLoggedIn(), async (req, res) => {
+app.put("/todo/:id", connectEnsureLogin.ensureLoggedIn(), async (req, res) => {
   try {
     const todo = await Todo.findByPk(req.params.id);
     if (!todo) return res.status(404).send("Todo not found");
@@ -192,7 +192,7 @@ app.put("/todos/:id", connectEnsureLogin.ensureLoggedIn(), async (req, res) => {
 });
 
 app.delete(
-  "/todos/:id",
+  "/todo/:id",
   connectEnsureLogin.ensureLoggedIn(),
   async function (request, response) {
     console.log("We have to delete a Todo with ID: ", request.params.id);
@@ -229,7 +229,7 @@ app.post("/users", async function (request, response) {
         console.log(error);
         return response.redirect("/signup");
       }
-      response.redirect("/todos");
+      response.redirect("/todo");
     });
   } catch (error) {
     // Handle Sequelize validation errors
@@ -254,7 +254,7 @@ app.post(
   }),
   function (request, response) {
     console.log(request.user);
-    response.redirect("/todos");
+    response.redirect("/todo");
   },
 );
 app.get("/signout", (request, response, next) => {

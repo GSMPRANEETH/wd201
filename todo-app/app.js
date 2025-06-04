@@ -104,7 +104,7 @@ app.get("/", async (request, response) => {
 });
 
 app.get(
-  "/todo",
+  "/todos",
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
     console.log("GET / route hit");
@@ -120,7 +120,7 @@ app.get(
       { title: "Completed", id: "count-completed", items: completed },
     ];
     if (request.accepts("html")) {
-      response.render("todo", {
+      response.render("todos", {
         sections,
         overdue,
         dueToday,
@@ -138,7 +138,7 @@ app.get(
 );
 
 app.get(
-  "/todo/:id",
+  "/todos/:id",
   connectEnsureLogin.ensureLoggedIn(),
   async function (request, response) {
     try {
@@ -152,7 +152,7 @@ app.get(
 );
 
 app.post(
-  "/todo",
+  "/todos",
   connectEnsureLogin.ensureLoggedIn(),
   async function (request, response) {
     try {
@@ -161,13 +161,13 @@ app.post(
         dueDate: request.body.dueDate,
         userId: request.user.id,
       });
-      return response.redirect("/todo");
+      return response.redirect("/todos");
     } catch (error) {
       if (error.name === "SequelizeValidationError") {
         error.errors.forEach((e) => {
           request.flash("error", e.message);
         });
-        return response.redirect("/todo");
+        return response.redirect("/todos");
       }
 
       console.error("Unexpected error:", error);
@@ -176,7 +176,7 @@ app.post(
   },
 );
 
-app.put("/todo/:id", connectEnsureLogin.ensureLoggedIn(), async (req, res) => {
+app.put("/todos/:id", connectEnsureLogin.ensureLoggedIn(), async (req, res) => {
   try {
     const todo = await Todo.findByPk(req.params.id);
     if (!todo) return res.status(404).send("Todo not found");
@@ -192,7 +192,7 @@ app.put("/todo/:id", connectEnsureLogin.ensureLoggedIn(), async (req, res) => {
 });
 
 app.delete(
-  "/todo/:id",
+  "/todos/:id",
   connectEnsureLogin.ensureLoggedIn(),
   async function (request, response) {
     console.log("We have to delete a Todo with ID: ", request.params.id);
@@ -260,7 +260,7 @@ app.post(
   }),
   function (request, response) {
     console.log(request.user);
-    response.redirect("/todo");
+    response.redirect("/todos");
   },
 );
 app.get("/signout", (request, response, next) => {

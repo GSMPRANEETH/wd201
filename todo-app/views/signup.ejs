@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="csrf-token" content="<%= csrfToken %>" />
+		<title>Todo Application</title>
+		<link rel="stylesheet" href="/css/styles.css" />
+	</head>
+    <body>
+		<%- include('header.ejs') %>
+        <h1>Sign up</h1>
+        <form action="/users" method="post">
+            <input type="hidden" name = "_csrf" value = "<%= csrfToken %>"/>
+            <label for="firstName">First Name</label>
+            <input type="text" name="firstName" placeholder="First Name" required />            
+            <label for="lastName">Last Name</label>
+            <input type="text" name="lastName" placeholder="Last Name" required />            
+            <label for="email">Email</label>
+            <input type="text" name="email" placeholder="Email" required />            
+            <label for="password">Password</label>
+            <input type="password" name="password" placeholder="Password" required />
+            <button type="submit">Sign up</button>
+        </form>
+        <%- include('footer.ejs') %>
+        </div>
+    </body>
+</html>

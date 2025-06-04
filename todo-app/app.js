@@ -4,7 +4,7 @@ console.log("Loading app.js...");
 const express = require("express");
 var csrf = require("csurf");
 const app = express();
-const { Todo } = require("./models");
+const { Todo, User } = require("./models");
 const bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
 app.use(bodyParser.json());
@@ -93,6 +93,25 @@ app.delete("/todos/:id", async function (request, response) {
 	// First, we have to query our database to delete a Todo by ID.
 	// Then, we have to respond back with true/false based on whether the Todo was deleted or not.
 	// response.send(true)
+});
+
+app.get("/signup", function (request, response) {
+	response.render("signup", { csrfToken: request.csrfToken() });
+});
+
+app.post("/users", async function (request, response) {
+	try {
+		const user = await User.create({
+			firstName: request.body.firstName,
+			lastName: request.body.lastName,
+			email: request.body.email,
+			password: request.body.password,
+		});
+		response.redirect("/");
+	} catch {
+		console.log(error);
+		return response.status(422).json(error);
+	}
 });
 
 module.exports = app;

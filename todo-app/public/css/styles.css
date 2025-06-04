@@ -1,7 +1,3 @@
-body {
-	background-color: lightgrey;
-}
-
 .todos.hover .trash-icon {
 	display: block;
 }

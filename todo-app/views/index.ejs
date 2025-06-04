@@ -8,8 +8,11 @@
 		<title>Todo Application</title>
 		<link rel="stylesheet" href="/css/styles.css" />
 	</head>
-	<body class="bg-gray-100">
+	<body>
 		<%- include('header.ejs') %>
+    <p>Welcome to the Todo Application</p>
+    <a href="/signup">Sign up</a>
+    <a href="/login">Login</a>
 		<form action="/todos" method="post">
 			<input type="hidden" name="_csrf" value="<%= csrfToken %>" />
 

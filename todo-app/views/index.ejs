@@ -13,62 +13,9 @@
     <p>Welcome to the Todo Application</p>
     <a href="/signup">Sign up</a>
     <a href="/login">Login</a>
-		<form action="/todos" method="post">
-			<input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-
-			<input type="text" name = "title" placeholder="What's next?" required/>
-			<input type="date" name = "dueDate" required />
-			<button type="submit">Add</button>
-		</form>
-			<%- include('todos.ejs') %>
 			 <%- include('footer.ejs') %>
 		</div>
 	</body>
-	<script>
-  const csrfToken = document
-    .querySelector('meta[name="csrf-token"]')
-    .getAttribute("content");
 
-  function updateTodo(id) {
-    const checkbox = document.getElementById(`todo-${id}`);
-    const completed = checkbox.checked;
-
-    fetch(`/todos/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "CSRF-Token": csrfToken, // Needed if using csurf middleware
-      },
-      body: JSON.stringify({ completed, _csrf: csrfToken }),
-    })
-    .then(response => {
-      if (response.ok) {
-        window.location.reload();
-      }
-    })
-    .catch(error => {
-      console.error("Error updating todo:", error);
-    });
-  }
-
-  function deleteTodo(id) {
-    fetch(`/todos/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        "CSRF-Token": csrfToken,
-      },
-      body: JSON.stringify({ _csrf: csrfToken }),
-    })
-    .then(response => {
-      if (response.ok) {
-        window.location.reload();
-      }
-    })
-    .catch(error => {
-      console.error("Error deleting todo:", error);
-    });
-  }
-</script>
 
 </html>

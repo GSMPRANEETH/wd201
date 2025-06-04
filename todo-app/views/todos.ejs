@@ -1,37 +1,31 @@
-<%
-const today = new Date();
-const isSameDay = (d1, d2) =>
-  d1.getFullYear() === d2.getFullYear() &&
-  d1.getMonth() === d2.getMonth() &&
-  d1.getDate() === d2.getDate();
-
-const overdue = [];
-const dueToday = [];
-const dueLater = [];
-const completed = [];
-
-allTodos.forEach(todo => {
-  const due = new Date(todo.dueDate);
-  if (todo.completed) {
-    completed.push(todo);
-  } else if (due < today && !isSameDay(due, today)) {
-    overdue.push(todo);
-  } else if (isSameDay(due, today)) {
-    dueToday.push(todo);
-  } else {
-    dueLater.push(todo);
-  }
-});
-
+<!-- <%
 const sections = [
   { title: "Overdue", id: "count-overdue", items: overdue },
   { title: "Due Today", id: "count-due-today", items: dueToday },
   { title: "Due Later", id: "count-due-later", items: dueLater },
   { title: "Completed", id: "count-completed", items: completed },
 ];
-%>
+%> -->
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="csrf-token" content="<%= csrfToken %>" />
+		<title>Todo Application</title>
+		<link rel="stylesheet" href="/css/styles.css" />
+	</head>
+    <body>
+		<%- include('header.ejs') %>
+    <form action="/todos" method="post">
+			<input type="hidden" name="_csrf" value="<%= csrfToken %>" />
 
-<% sections.forEach(section => { %>
+			<input type="text" name = "title" placeholder="What's next?" required/>
+			<input type="date" name = "dueDate" required />
+			<button type="submit">Add</button>
+		</form>
+        <% sections.forEach(section => { %>
   <h5>
     <%= section.title %> (<span id="<%= section.id %>"><%= section.items.length %></span>)
   </h5>
@@ -61,3 +55,52 @@ const sections = [
     <% }) %>
   </table>
 <% }) %>
+        <%- include('footer.ejs') %>
+        </div>
+        <a href="/signout">Sign out</a>
+    </body>
+    	<script>
+  const csrfToken = document
+    .querySelector('meta[name="csrf-token"]')
+    .getAttribute("content");
+
+  function updateTodo(id) {
+    const checkbox = document.getElementById(`todo-${id}`);
+    const completed = checkbox.checked;
+
+    fetch(`/todos/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "CSRF-Token": csrfToken, // Needed if using csurf middleware
+      },
+      body: JSON.stringify({ completed, _csrf: csrfToken }),
+    })
+    .then(response => {
+      if (response.ok) {
+        window.location.reload();
+      }
+    })
+    .catch(error => {
+      console.error("Error updating todo:", error);
+    });
+  }
+
+  function deleteTodo(id) {
+  fetch(`/todos/${id}?_csrf=${csrfToken}`, {
+    method: "DELETE",
+  })
+    .then((response) => {
+      if (response.ok) {
+        window.location.reload();
+      } else {
+        console.error("Failed to delete todo:", response.status);
+      }
+    })
+    .catch((error) => {
+      console.error("Error deleting todo:", error);
+    });
+}
+
+</script>
+</html>

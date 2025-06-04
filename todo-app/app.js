@@ -217,28 +217,34 @@ app.get("/signup", function (request, response) {
 
 app.post("/users", async function (request, response) {
   try {
-    const hashedPwd = await bcrypt.hash(request.body.password, 10);
-    const user = await User.create({
+    // Validate using Sequelize before hashing
+    const user = await User.build({
       firstName: request.body.firstName,
       lastName: request.body.lastName,
       email: request.body.email,
-      password: hashedPwd,
+      password: request.body.password,
     });
+
+    await user.validate(); // triggers SequelizeValidationError for empty password, etc.
+
+    // If validation passes, hash the password and save
+    user.password = await bcrypt.hash(request.body.password, 10);
+    await user.save();
+
     request.login(user, (error) => {
       if (error) {
         console.log(error);
         return response.redirect("/signup");
       }
-      response.redirect("/todo");
+      return response.redirect("/todos");
     });
   } catch (error) {
-    // Handle Sequelize validation errors
     if (error.name === "SequelizeValidationError") {
       error.errors.forEach((e) => request.flash("error", e.message));
       return response.redirect("/signup");
     }
-    console.log(error);
-    response.status(500).send("Something went wrong");
+    console.error("Unexpected error:", error);
+    return response.status(500).send("Something went wrong");
   }
 });
 

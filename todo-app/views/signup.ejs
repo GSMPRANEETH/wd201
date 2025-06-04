@@ -11,16 +11,26 @@
     <body>
 		<%- include('header.ejs') %>
         <h1>Sign up</h1>
+        <% if (messages.error && messages.error.length > 0) { %>
+  <div class="alert alert-danger">
+    <ul>
+      <% messages.error.forEach(msg => { %>
+        <li><%= msg %></li>
+      <% }) %>
+    </ul>
+  </div>
+<% } %>
+
         <form action="/users" method="post">
             <input type="hidden" name = "_csrf" value = "<%= csrfToken %>"/>
             <label for="firstName">First Name</label>
-            <input type="text" name="firstName" placeholder="First Name" required />            
+            <input type="text" name="firstName" placeholder="First Name" />            
             <label for="lastName">Last Name</label>
-            <input type="text" name="lastName" placeholder="Last Name" required />            
+            <input type="text" name="lastName" placeholder="Last Name" />            
             <label for="email">Email</label>
-            <input type="text" name="email" placeholder="Email" required />            
+            <input type="text" name="email" placeholder="Email" />            
             <label for="password">Password</label>
-            <input type="password" name="password" placeholder="Password" required />
+            <input type="password" name="password" placeholder="Password" />
             <button type="submit">Sign up</button>
         </form>
         <%- include('footer.ejs') %>

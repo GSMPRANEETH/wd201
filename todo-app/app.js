@@ -93,14 +93,16 @@ passport.deserializeUser((id, done) => {
     });
 });
 
-app.get("/", async (request, response) => {
+app.get("/", (req, res) => {
   console.log("GET / route hit");
 
-  if (request.accepts("html")) {
-    response.render("index", { csrfToken: request.csrfToken() });
-  } else {
-    response.json(allTodos);
+  if (req.isAuthenticated()) {
+    // If user is logged in, redirect to /todos
+    return res.redirect("/todos");
   }
+
+  // If not logged in, show the login page
+  res.render("index", { csrfToken: req.csrfToken() });
 });
 
 app.get(

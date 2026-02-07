@@ -1,7 +1,22 @@
-<form action="/todos" method="post">
+<form action="/todos" method="post" id="todoForm">
 	<input type="hidden" name="_csrf" value="<%= csrfToken %>" />
 
-	<input type="text" name="title" placeholder="What's next?" />
-	<input type="date" name="dueDate" />
-	<button type="submit">Add</button>
+	<input type="text" name="title" placeholder="What's next?" id="todoTitle" />
+	<input type="date" name="dueDate" id="todoDueDate" />
+	<button type="submit" id="todoButton" disabled>Add</button>
 </form>
+<script>
+	const todoForm = document.getElementById('todoForm');
+	const todoButton = document.getElementById('todoButton');
+	let todoFormTouched = false;
+
+	// Enable button when form is touched
+	todoForm.addEventListener('input', function() {
+		todoFormTouched = true;
+		const title = document.getElementById('todoTitle').value.trim();
+		const dueDate = document.getElementById('todoDueDate').value;
+		
+		// Enable button only if form is touched and title has value
+		todoButton.disabled = !(todoFormTouched && title);
+	});
+</script>

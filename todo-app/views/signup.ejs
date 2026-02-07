@@ -21,18 +21,35 @@
   </div>
 <% } %>
 
-        <form action="/users" method="post">
+        <form action="/users" method="post" id="signupForm">
             <input type="hidden" name = "_csrf" value = "<%= csrfToken %>"/>
             <label for="firstName">First Name</label>
-            <input type="text" name="firstName" placeholder="First Name" />            
+            <input type="text" name="firstName" placeholder="First Name" id="firstName" />            
             <label for="lastName">Last Name</label>
-            <input type="text" name="lastName" placeholder="Last Name" />            
+            <input type="text" name="lastName" placeholder="Last Name" id="lastName" />            
             <label for="email">Email</label>
-            <input type="text" name="email" placeholder="Email" />            
+            <input type="text" name="email" placeholder="Email" id="email" />            
             <label for="password">Password</label>
-            <input type="password" name="password" placeholder="Password" />
-            <button type="submit">Sign up</button>
+            <input type="password" name="password" placeholder="Password" id="password" />
+            <button type="submit" id="signupButton" disabled>Sign up</button>
         </form>
+        <script>
+            const signupForm = document.getElementById('signupForm');
+            const signupButton = document.getElementById('signupButton');
+            let formTouched = false;
+
+            // Enable button when form is touched
+            signupForm.addEventListener('input', function() {
+                formTouched = true;
+                const firstName = document.getElementById('firstName').value.trim();
+                const lastName = document.getElementById('lastName').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value.trim();
+                
+                // Enable button only if form is touched and all fields have values
+                signupButton.disabled = !(formTouched && firstName && lastName && email && password);
+            });
+        </script>
         <%- include('footer.ejs') %>
         </div>
     </body>

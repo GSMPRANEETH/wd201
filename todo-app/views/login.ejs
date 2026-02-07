@@ -11,14 +11,29 @@
     <body>
 		<%- include('header.ejs') %>
         <h1>Sign in</h1>
-        <form action="/session" method="post">      
+        <form action="/session" method="post" id="loginForm">      
             <input type="hidden" name = "_csrf" value = "<%= csrfToken %>"/>  
             <label for="email">Email</label>
-            <input type="text" name="email" placeholder="Email" />            
+            <input type="text" name="email" placeholder="Email" id="loginEmail" />            
             <label for="password">Password</label>
-            <input type="password" name="password" placeholder="Password" />
-            <button type="submit">Sign in</button>
+            <input type="password" name="password" placeholder="Password" id="loginPassword" />
+            <button type="submit" id="loginButton" disabled>Sign in</button>
         </form>
+        <script>
+            const loginForm = document.getElementById('loginForm');
+            const loginButton = document.getElementById('loginButton');
+            let loginFormTouched = false;
+
+            // Enable button when form is touched
+            loginForm.addEventListener('input', function() {
+                loginFormTouched = true;
+                const email = document.getElementById('loginEmail').value.trim();
+                const password = document.getElementById('loginPassword').value.trim();
+                
+                // Enable button only if form is touched and all fields have values
+                loginButton.disabled = !(loginFormTouched && email && password);
+            });
+        </script>
         <% if(messages && messages.error && messages.error.length > 0)  { %>
   <% for(var i=0; i<messages.error.length; i++) { %>
           <li> <%= messages.error[i] %></li>

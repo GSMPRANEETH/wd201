@@ -59,17 +59,28 @@
     <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" opacity="0.75"></path>
   </svg>`;
 
+  // Helper to show loading spinner in a table row
+  function showLoadingInRow(row) {
+    const originalContent = row.innerHTML;
+    const colCount = row.cells.length;
+    row.innerHTML = `<td colspan="${colCount}" style="text-align: center;">
+      <span class="loading-spinner">${LOADING_SPINNER_SVG}</span>
+    </td>`;
+    return originalContent;
+  }
+
+  // Helper to restore original row content
+  function restoreRowContent(row, originalContent) {
+    row.innerHTML = originalContent;
+  }
+
   function updateTodo(id) {
     const checkbox = document.getElementById(`todo-${id}`);
     const completed = checkbox.checked;
 
     // Show loading spinner
     const row = checkbox.closest('tr');
-    const originalContent = row.innerHTML;
-    const colCount = row.cells.length;
-    row.innerHTML = `<td colspan="${colCount}" style="text-align: center;">
-      <span class="loading-spinner">${LOADING_SPINNER_SVG}</span>
-    </td>`;
+    const originalContent = showLoadingInRow(row);
 
     fetch(`/todos/${id}`, {
       method: "PUT",
@@ -84,26 +95,22 @@
         window.location.reload();
       } else {
         // Restore original content on error
-        row.innerHTML = originalContent;
+        restoreRowContent(row, originalContent);
         console.error("Failed to update todo:", response.status);
       }
     })
     .catch(error => {
       // Restore original content on error
-      row.innerHTML = originalContent;
+      restoreRowContent(row, originalContent);
       console.error("Error updating todo:", error);
     });
   }
 
   function deleteTodo(id) {
     const row = document.getElementById(`todo-${id}`).closest('tr');
-    const originalContent = row.innerHTML;
-    const colCount = row.cells.length;
     
     // Show loading spinner
-    row.innerHTML = `<td colspan="${colCount}" style="text-align: center;">
-      <span class="loading-spinner">${LOADING_SPINNER_SVG}</span>
-    </td>`;
+    const originalContent = showLoadingInRow(row);
 
     fetch(`/todos/${id}?_csrf=${csrfToken}`, {
       method: "DELETE",
@@ -113,13 +120,13 @@
         window.location.reload();
       } else {
         // Restore original content on error
-        row.innerHTML = originalContent;
+        restoreRowContent(row, originalContent);
         console.error("Failed to delete todo:", response.status);
       }
     })
     .catch((error) => {
       // Restore original content on error
-      row.innerHTML = originalContent;
+      restoreRowContent(row, originalContent);
       console.error("Error deleting todo:", error);
     });
   }

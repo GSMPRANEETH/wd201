@@ -1,4 +1,8 @@
 /* Loading spinner animation */
+.loading-spinner {
+  display: inline-block;
+}
+
 .loading-spinner svg {
   animation: rotate 1s linear infinite;
 }

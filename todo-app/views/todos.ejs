@@ -12,7 +12,6 @@
 		<%- include('header.ejs') %>
       <%- include('notifications.ejs') %>
     <%- include('todo.ejs') %>
-    <div class="todos-container">
         <% sections.forEach(section => { %>
   <h5>
     <%= section.title %> (<span id="<%= section.id %>"><%= section.items.length %></span>)
@@ -43,7 +42,6 @@
     <% }) %>
   </table>
 <% }) %>
-    </div>
         <%- include('footer.ejs') %>
         </div>
         <a href="/signout">signout</a>

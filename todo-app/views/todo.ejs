@@ -14,9 +14,8 @@
 	todoForm.addEventListener('input', function() {
 		todoFormTouched = true;
 		const title = document.getElementById('todoTitle').value.trim();
-		const dueDate = document.getElementById('todoDueDate').value;
 		
-		// Enable button only if form is touched and title has value
+		// Enable button only if form is touched and title has value (dueDate is optional)
 		todoButton.disabled = !(todoFormTouched && title);
 	});
 </script>

@@ -59,11 +59,6 @@
     <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" opacity="0.75"></path>
   </svg>`;
 
-  // Helper function to get loading spinner
-  function getLoadingSpinner() {
-    return LOADING_SPINNER_SVG;
-  }
-
   function updateTodo(id) {
     const checkbox = document.getElementById(`todo-${id}`);
     const completed = checkbox.checked;
@@ -73,7 +68,7 @@
     const originalContent = row.innerHTML;
     const colCount = row.cells.length;
     row.innerHTML = `<td colspan="${colCount}" style="text-align: center;">
-      <span class="loading-spinner">${getLoadingSpinner()}</span>
+      <span class="loading-spinner">${LOADING_SPINNER_SVG}</span>
     </td>`;
 
     fetch(`/todos/${id}`, {
@@ -107,7 +102,7 @@
     
     // Show loading spinner
     row.innerHTML = `<td colspan="${colCount}" style="text-align: center;">
-      <span class="loading-spinner">${getLoadingSpinner()}</span>
+      <span class="loading-spinner">${LOADING_SPINNER_SVG}</span>
     </td>`;
 
     fetch(`/todos/${id}?_csrf=${csrfToken}`, {
